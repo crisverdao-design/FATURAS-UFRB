@@ -609,7 +609,10 @@
 <script>
 (function(){
 
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_MYI2JUA8ppxgbnsXIirwM5qeDg2Xwdz4wG0A2qJykgD-qDl7t0y3d2ifKmHDzNgE/exec";
+  // Arquivo estático gerado periodicamente pelo Apps Script (via GitHub API) e commitado
+  // no mesmo repositório. O navegador do visitante nunca fala com o Google para ler os
+  // dados, evitando o problema de redirecionamento de conta do script.google.com.
+  const DADOS_URL = "data.json";
 
   const CORES_TIPO = ['#1e3a8a','#2563eb','#3b82f6','#60a5fa','#93c5fd','#0ea5e9','#0891b2','#0d9488','#14b8a6','#64748b'];
   const CORES_ESPEC = ['#c2660d','#d97706','#f59e0b','#fbbf24','#b45309','#ea580c','#dc2626','#9f1239','#7c3aed','#6d28d9','#4338ca','#64748b'];
@@ -736,52 +739,34 @@
   }
 
   // ---------- Carregamento e processamento ----------
+  let ultimaSincronizacao = null;
+
   function carregarDados(){
     const btn = $('btnAtualizar');
     if(btn) btn.classList.add('carregando');
     $('statusCarga').textContent = 'Carregando dados da planilha…';
     $('statusCarga').classList.remove('erro');
 
-    const nomeCallback = 'callbackDadosCODIN_' + Date.now();
-    let finalizado = false;
-    const scriptTag = document.createElement('script');
-
-    function limpar(){
-      delete window[nomeCallback];
-      if(scriptTag.parentNode) scriptTag.parentNode.removeChild(scriptTag);
-      clearTimeout(tempoLimite);
-    }
-
-    const tempoLimite = setTimeout(function(){
-      if(finalizado) return;
-      finalizado = true;
-      limpar();
-      if(btn) btn.classList.remove('carregando');
-      mostrarErroCarregamento();
-    }, 15000);
-
-    window[nomeCallback] = function(linhas){
-      if(finalizado) return;
-      finalizado = true;
-      limpar();
-      if(btn) btn.classList.remove('carregando');
-      processarResultado({data: linhas || []});
-    };
-
-    scriptTag.onerror = function(){
-      if(finalizado) return;
-      finalizado = true;
-      limpar();
-      if(btn) btn.classList.remove('carregando');
-      mostrarErroCarregamento();
-    };
-
-    scriptTag.src = APPS_SCRIPT_URL + '?callback=' + nomeCallback + '&_cb=' + Date.now();
-    document.head.appendChild(scriptTag);
+    fetch(DADOS_URL + '?_cb=' + Date.now(), {cache:'no-store'})
+      .then(resp=>{
+        if(!resp.ok) throw new Error('HTTP ' + resp.status);
+        return resp.json();
+      })
+      .then(payload=>{
+        if(btn) btn.classList.remove('carregando');
+        const linhas = (payload && Array.isArray(payload.linhas)) ? payload.linhas : [];
+        ultimaSincronizacao = (payload && payload.atualizadoEm) ? payload.atualizadoEm : null;
+        processarResultado({data: linhas});
+      })
+      .catch(err=>{
+        if(btn) btn.classList.remove('carregando');
+        console.error('Falha ao carregar data.json:', err);
+        mostrarErroCarregamento();
+      });
   }
 
   function mostrarErroCarregamento(){
-    $('statusCarga').innerHTML = 'Não foi possível carregar os dados da planilha no momento. Tente atualizar a página novamente em instantes.';
+    $('statusCarga').innerHTML = 'Não foi possível carregar os dados (arquivo data.json). Verifique se a sincronização automática no Apps Script já rodou pelo menos uma vez.';
     $('statusCarga').classList.add('erro');
   }
 
@@ -849,9 +834,13 @@
   }
 
   function atualizarDataHora(){
-    const agora = new Date();
-    const dataStr = agora.toLocaleDateString('pt-BR');
-    const horaStr = agora.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+    let referencia = new Date();
+    if(ultimaSincronizacao){
+      const parsed = new Date(ultimaSincronizacao);
+      if(!isNaN(parsed.getTime())) referencia = parsed;
+    }
+    const dataStr = referencia.toLocaleDateString('pt-BR');
+    const horaStr = referencia.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
     $('dataHoraAtualizacao').textContent = dataStr + ' às ' + horaStr;
   }
 
