@@ -178,6 +178,64 @@
   .campo-filtro select:hover{border-color:#b7c3e0;}
   .campo-filtro select:focus{outline:none; border-color:var(--azul-institucional); box-shadow:0 0 0 3px rgba(30,58,138,.12);}
 
+  /* ===== Multi-select (filtros com múltipla seleção) ===== */
+  .multiselect{position:relative;}
+  .multiselect-toggle{
+    width:100%;
+    text-align:left;
+    appearance:none;
+    padding:9px 34px 9px 12px;
+    border:1.5px solid var(--borda);
+    border-radius:9px;
+    background:#fbfcfe url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6"><path d="M0 0l5 6 5-6z" fill="%23647096"/></svg>') no-repeat right 12px center;
+    font-family:inherit;
+    font-size:13.5px;
+    font-weight:500;
+    color:var(--cinza-texto);
+    cursor:pointer;
+    transition:border-color .15s;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .multiselect-toggle:hover{border-color:#b7c3e0;}
+  .multiselect.aberto .multiselect-toggle{border-color:var(--azul-institucional); box-shadow:0 0 0 3px rgba(30,58,138,.12);}
+  .multiselect-menu{
+    display:none;
+    position:absolute;
+    top:calc(100% + 6px);
+    left:0;
+    min-width:230px;
+    max-width:320px;
+    background:#fff;
+    border:1px solid var(--borda);
+    border-radius:11px;
+    box-shadow:0 10px 28px rgba(15,32,73,.14);
+    z-index:20;
+    overflow:hidden;
+  }
+  .multiselect.aberto .multiselect-menu{display:block;}
+  .multiselect-menu-acoes{
+    display:flex; justify-content:space-between; gap:8px;
+    padding:8px 10px; border-bottom:1px solid var(--borda);
+    background:#fbfcfe;
+  }
+  .ms-acao{
+    border:none; background:none; color:var(--azul-institucional);
+    font-size:11.5px; font-weight:700; cursor:pointer; padding:2px 4px;
+  }
+  .ms-acao:hover{text-decoration:underline;}
+  .multiselect-opcoes{max-height:230px; overflow-y:auto; padding:6px 0;}
+  .ms-opcao{
+    display:flex; align-items:center; gap:9px;
+    padding:7px 12px; font-size:13px; color:var(--cinza-texto);
+    cursor:pointer;
+  }
+  .ms-opcao:hover{background:var(--azul-claro);}
+  .ms-opcao input{width:15px; height:15px; accent-color:var(--azul-institucional); cursor:pointer; flex:0 0 auto;}
+  .ms-opcao span{flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .multiselect-opcoes .ms-vazio{padding:10px 12px; font-size:12.5px; color:var(--cinza-medio);}
+
   .toolbar-acoes{
     display:flex; align-items:center; gap:10px;
     margin-left:auto;
@@ -486,28 +544,82 @@
   <!-- FILTROS -->
   <div class="toolbar">
     <div class="campo-filtro">
-      <label for="filtroTipo">Tipo</label>
-      <select id="filtroTipo"><option value="">Todos</option></select>
+      <label>Tipo</label>
+      <div class="multiselect" data-filtro="tipo">
+        <button type="button" class="multiselect-toggle">Todos</button>
+        <div class="multiselect-menu">
+          <div class="multiselect-menu-acoes">
+            <button type="button" class="ms-acao" data-acao="marcar-todos">Marcar todos</button>
+            <button type="button" class="ms-acao" data-acao="limpar">Limpar</button>
+          </div>
+          <div class="multiselect-opcoes"></div>
+        </div>
+      </div>
     </div>
     <div class="campo-filtro">
-      <label for="filtroClassificacao">Classificação</label>
-      <select id="filtroClassificacao"><option value="">Todas</option></select>
+      <label>Classificação</label>
+      <div class="multiselect" data-filtro="classificacao">
+        <button type="button" class="multiselect-toggle">Todas</button>
+        <div class="multiselect-menu">
+          <div class="multiselect-menu-acoes">
+            <button type="button" class="ms-acao" data-acao="marcar-todos">Marcar todas</button>
+            <button type="button" class="ms-acao" data-acao="limpar">Limpar</button>
+          </div>
+          <div class="multiselect-opcoes"></div>
+        </div>
+      </div>
     </div>
     <div class="campo-filtro">
-      <label for="filtroStatus">Status</label>
-      <select id="filtroStatus"><option value="">Todos</option></select>
+      <label>Status</label>
+      <div class="multiselect" data-filtro="status">
+        <button type="button" class="multiselect-toggle">Todos</button>
+        <div class="multiselect-menu">
+          <div class="multiselect-menu-acoes">
+            <button type="button" class="ms-acao" data-acao="marcar-todos">Marcar todos</button>
+            <button type="button" class="ms-acao" data-acao="limpar">Limpar</button>
+          </div>
+          <div class="multiselect-opcoes"></div>
+        </div>
+      </div>
     </div>
     <div class="campo-filtro">
-      <label for="filtroCompetencia">Competência</label>
-      <select id="filtroCompetencia"><option value="">Todas</option></select>
+      <label>Competência</label>
+      <div class="multiselect" data-filtro="competencia">
+        <button type="button" class="multiselect-toggle">Todas</button>
+        <div class="multiselect-menu">
+          <div class="multiselect-menu-acoes">
+            <button type="button" class="ms-acao" data-acao="marcar-todos">Marcar todas</button>
+            <button type="button" class="ms-acao" data-acao="limpar">Limpar</button>
+          </div>
+          <div class="multiselect-opcoes"></div>
+        </div>
+      </div>
     </div>
     <div class="campo-filtro">
-      <label for="filtroContrato">Nº Contrato</label>
-      <select id="filtroContrato"><option value="">Todos</option></select>
+      <label>Nº Contrato</label>
+      <div class="multiselect" data-filtro="numContrato">
+        <button type="button" class="multiselect-toggle">Todos</button>
+        <div class="multiselect-menu">
+          <div class="multiselect-menu-acoes">
+            <button type="button" class="ms-acao" data-acao="marcar-todos">Marcar todos</button>
+            <button type="button" class="ms-acao" data-acao="limpar">Limpar</button>
+          </div>
+          <div class="multiselect-opcoes"></div>
+        </div>
+      </div>
     </div>
     <div class="campo-filtro">
-      <label for="filtroContratada">Contratada</label>
-      <select id="filtroContratada"><option value="">Todas</option></select>
+      <label>Contratada</label>
+      <div class="multiselect" data-filtro="contratada">
+        <button type="button" class="multiselect-toggle">Todas</button>
+        <div class="multiselect-menu">
+          <div class="multiselect-menu-acoes">
+            <button type="button" class="ms-acao" data-acao="marcar-todos">Marcar todas</button>
+            <button type="button" class="ms-acao" data-acao="limpar">Limpar</button>
+          </div>
+          <div class="multiselect-opcoes"></div>
+        </div>
+      </div>
     </div>
     <div class="toolbar-acoes">
       <button class="btn-limpar" id="btnLimpar" type="button">Limpar filtros</button>
@@ -844,7 +956,20 @@
     $('dataHoraAtualizacao').textContent = dataStr + ' às ' + horaStr;
   }
 
-  // ---------- Filtros ----------
+  // ---------- Filtros (múltipla seleção) ----------
+  const estadoFiltros = {
+    tipo: new Set(),
+    classificacao: new Set(),
+    status: new Set(),
+    competencia: new Set(),
+    numContrato: new Set(),
+    contratada: new Set()
+  };
+  const rotulosTodosPorFiltro = {
+    tipo:'Todos', classificacao:'Todas', status:'Todos',
+    competencia:'Todas', numContrato:'Todos', contratada:'Todas'
+  };
+
   function valoresUnicos(campo){
     const s = new Set();
     dadosBrutos.forEach(d => s.add(d[campo]));
@@ -852,37 +977,59 @@
   }
 
   function popularFiltros(){
-    preencherSelect('filtroTipo', valoresUnicos('tipo'), 'Todos');
-    preencherSelect('filtroClassificacao', valoresUnicos('classificacao'), 'Todas');
+    popularMultiSelect('tipo', valoresUnicos('tipo'));
+    popularMultiSelect('classificacao', valoresUnicos('classificacao'));
 
     const statusChaves = Array.from(new Set(dadosBrutos.map(d=>d.statusChave)));
     const statusOrdem = ['faturado','previsto','nao_faturado','encerrado','outro'];
     statusChaves.sort((a,b)=>statusOrdem.indexOf(a)-statusOrdem.indexOf(b));
-    const selStatus = $('filtroStatus');
-    const valorAtualStatus = selStatus.value;
-    selStatus.innerHTML = '<option value="">Todos</option>' +
-      statusChaves.map(c => `<option value="${c}">${rotuloStatus(c)}</option>`).join('');
-    if(statusChaves.includes(valorAtualStatus)) selStatus.value = valorAtualStatus;
+    const mapaStatusRotulo = new Map(statusChaves.map(c=>[c, rotuloStatus(c)]));
+    popularMultiSelect('status', statusChaves, mapaStatusRotulo);
 
     const compMap = new Map();
     dadosBrutos.forEach(d => compMap.set(d.competenciaChave, d.competenciaRotulo));
     const compsOrdenadas = Array.from(compMap.keys()).sort();
-    const selComp = $('filtroCompetencia');
-    const valorAtualComp = selComp.value;
-    selComp.innerHTML = '<option value="">Todas</option>' +
-      compsOrdenadas.map(c => `<option value="${c}">${compMap.get(c)}</option>`).join('');
-    if(compsOrdenadas.includes(valorAtualComp)) selComp.value = valorAtualComp;
+    popularMultiSelect('competencia', compsOrdenadas, compMap);
 
-    preencherSelect('filtroContrato', valoresUnicos('numContrato'), 'Todos');
-    preencherSelect('filtroContratada', valoresUnicos('contratada'), 'Todas');
+    popularMultiSelect('numContrato', valoresUnicos('numContrato'));
+    popularMultiSelect('contratada', valoresUnicos('contratada'));
   }
 
-  function preencherSelect(id, valores, rotuloTodos){
-    const sel = $(id);
-    const atual = sel.value;
-    sel.innerHTML = `<option value="">${rotuloTodos}</option>` +
-      valores.map(v => `<option value="${escaparHtml(v)}">${escaparHtml(v)}</option>`).join('');
-    if(valores.includes(atual)) sel.value = atual;
+  function popularMultiSelect(filtroKey, valores, mapaRotulos){
+    const container = document.querySelector(`.multiselect[data-filtro="${filtroKey}"]`);
+    if(!container) return;
+    const opcoesEl = container.querySelector('.multiselect-opcoes');
+
+    // mantém marcados apenas os valores que ainda existem na nova lista
+    const setAtual = estadoFiltros[filtroKey];
+    const novoSet = new Set(Array.from(setAtual).filter(v => valores.includes(v)));
+    estadoFiltros[filtroKey] = novoSet;
+
+    if(valores.length === 0){
+      opcoesEl.innerHTML = '<div class="ms-vazio">Nenhuma opção disponível.</div>';
+    } else {
+      opcoesEl.innerHTML = valores.map(v=>{
+        const rotulo = mapaRotulos ? mapaRotulos.get(v) : v;
+        const marcado = novoSet.has(v) ? 'checked' : '';
+        return `<label class="ms-opcao"><input type="checkbox" value="${escaparHtml(v)}" ${marcado}><span>${escaparHtml(rotulo)}</span></label>`;
+      }).join('');
+    }
+    atualizarRotuloMultiSelect(filtroKey);
+  }
+
+  function atualizarRotuloMultiSelect(filtroKey){
+    const container = document.querySelector(`.multiselect[data-filtro="${filtroKey}"]`);
+    if(!container) return;
+    const btn = container.querySelector('.multiselect-toggle');
+    const set = estadoFiltros[filtroKey];
+    if(set.size === 0){
+      btn.textContent = rotulosTodosPorFiltro[filtroKey];
+    } else if(set.size === 1){
+      const opcaoMarcada = container.querySelector('.multiselect-opcoes input:checked');
+      btn.textContent = opcaoMarcada ? opcaoMarcada.nextElementSibling.textContent : '1 selecionado';
+    } else {
+      btn.textContent = set.size + ' selecionados';
+    }
   }
 
   function escaparHtml(s){
@@ -890,22 +1037,63 @@
   }
 
   function obterDadosFiltrados(){
-    const tipo = $('filtroTipo').value;
-    const classif = $('filtroClassificacao').value;
-    const status = $('filtroStatus').value;
-    const comp = $('filtroCompetencia').value;
-    const contrato = $('filtroContrato').value;
-    const contratada = $('filtroContratada').value;
-
     return dadosBrutos.filter(d =>
-      (!tipo || d.tipo === tipo) &&
-      (!classif || d.classificacao === classif) &&
-      (!status || d.statusChave === status) &&
-      (!comp || d.competenciaChave === comp) &&
-      (!contrato || d.numContrato === contrato) &&
-      (!contratada || d.contratada === contratada)
+      (estadoFiltros.tipo.size===0 || estadoFiltros.tipo.has(d.tipo)) &&
+      (estadoFiltros.classificacao.size===0 || estadoFiltros.classificacao.has(d.classificacao)) &&
+      (estadoFiltros.status.size===0 || estadoFiltros.status.has(d.statusChave)) &&
+      (estadoFiltros.competencia.size===0 || estadoFiltros.competencia.has(d.competenciaChave)) &&
+      (estadoFiltros.numContrato.size===0 || estadoFiltros.numContrato.has(d.numContrato)) &&
+      (estadoFiltros.contratada.size===0 || estadoFiltros.contratada.has(d.contratada))
     );
   }
+
+  // Abre/fecha o menu de cada multi-select
+  document.querySelectorAll('.multiselect-toggle').forEach(btn=>{
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      const ms = btn.closest('.multiselect');
+      const estavaAberto = ms.classList.contains('aberto');
+      document.querySelectorAll('.multiselect.aberto').forEach(o=>o.classList.remove('aberto'));
+      if(!estavaAberto) ms.classList.add('aberto');
+    });
+  });
+  document.addEventListener('click', function(e){
+    document.querySelectorAll('.multiselect.aberto').forEach(ms=>{
+      if(!ms.contains(e.target)) ms.classList.remove('aberto');
+    });
+  });
+
+  // Marcar/desmarcar uma opção
+  document.addEventListener('change', function(e){
+    if(e.target.matches('.multiselect-opcoes input[type="checkbox"]')){
+      const container = e.target.closest('.multiselect');
+      const filtroKey = container.dataset.filtro;
+      const valor = e.target.value;
+      if(e.target.checked) estadoFiltros[filtroKey].add(valor);
+      else estadoFiltros[filtroKey].delete(valor);
+      atualizarRotuloMultiSelect(filtroKey);
+      renderizarTudo();
+    }
+  });
+
+  // Botões "Marcar todos" / "Limpar" dentro de cada filtro
+  document.addEventListener('click', function(e){
+    if(e.target.matches('.ms-acao')){
+      const container = e.target.closest('.multiselect');
+      const filtroKey = container.dataset.filtro;
+      const acao = e.target.dataset.acao;
+      const checkboxes = container.querySelectorAll('.multiselect-opcoes input[type="checkbox"]');
+      if(acao === 'marcar-todos'){
+        checkboxes.forEach(cb=>{ cb.checked = true; estadoFiltros[filtroKey].add(cb.value); });
+      } else if(acao === 'limpar'){
+        checkboxes.forEach(cb=>{ cb.checked = false; });
+        estadoFiltros[filtroKey].clear();
+      }
+      atualizarRotuloMultiSelect(filtroKey);
+      renderizarTudo();
+    }
+  });
+
 
   // ---------- Render geral ----------
   function renderizarTudo(){
@@ -1125,11 +1313,10 @@
   }
 
   // ---------- Eventos ----------
-  ['filtroTipo','filtroClassificacao','filtroStatus','filtroCompetencia','filtroContrato','filtroContratada'].forEach(id=>{
-    $(id).addEventListener('change', renderizarTudo);
-  });
   $('btnLimpar').addEventListener('click', ()=>{
-    ['filtroTipo','filtroClassificacao','filtroStatus','filtroCompetencia','filtroContrato','filtroContratada'].forEach(id=>{ $(id).value=''; });
+    Object.keys(estadoFiltros).forEach(k=> estadoFiltros[k].clear());
+    document.querySelectorAll('.multiselect-opcoes input[type="checkbox"]').forEach(cb=>{ cb.checked = false; });
+    Object.keys(estadoFiltros).forEach(k=> atualizarRotuloMultiSelect(k));
     renderizarTudo();
   });
   $('btnAtualizar').addEventListener('click', function(){
